@@ -3,6 +3,12 @@ from datetime import datetime
 
 
 def calculate_travel_time(start_station_id, end_station_id):
+
+    # organied into a list of dictionaries
+    # the list represents the row and correpsonding fields in the dictionary are searchable
+
+    # read stop_times.txt file, 
+    
     # Read stop_times.txt file
     with open('stop_times.txt', 'r') as file:
         stop_times_reader = csv.DictReader(file)
