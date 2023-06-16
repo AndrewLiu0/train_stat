@@ -4,6 +4,10 @@ import scipy.stats as stats
 import numpy as np
 import matplotlib.pyplot as plt
 
+# fields needed for algorithm generation
+start_name = '34 St-Penn Station'
+end_name = 'Chambers St'
+
 # read stop_times.txt file
 with open('stop_times.txt', 'r') as file:
     stop_times_reader = csv.DictReader(file)
@@ -15,8 +19,10 @@ with open('stops.txt', 'r') as file:
     stops_data = list(stops_reader)
 
 # Create a dictionary to map stop_id to stop_name
-stop_name_mapping = {stop['stop_id']: stop['stop_name']
+id_to_name = {stop['stop_id']: stop['stop_name']
                         for stop in stops_data}
+
+name_to_id = {v: k for k, v in id_to_name.items()}
 
 def generate_delay():
     return stats.t.rvs(df=2, loc=2.18, scale=0.90, size=1)[0]
@@ -59,7 +65,7 @@ def full_time():
     minutes = (final_time.seconds % 3600) // 60
     seconds = final_time.seconds % 60
 
-    # print(f"Travel time from {stop_name_mapping[start_station_id]} to {stop_name_mapping[end_station_id]}:")
+    # print(f"Travel time from {id_to_name[start_station_id]} to {id_to_name[end_station_id]}:")
     # print(f"Travel time: {hours} hours, {minutes} minutes, {seconds} seconds")
     return seconds + minutes*60 + hours*3600
     
@@ -67,7 +73,9 @@ def full_time():
 start_station_id = 'A02S'  # should be flutter input
 end_station_id = 'H11S'  # should be flutter input
 
-print(calculate_travel_time(start_station_id, end_station_id))
+
+
+print(calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name)))
 
 travelsimulation = []
 for i in range(100):
