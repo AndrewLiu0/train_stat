@@ -18,7 +18,6 @@ with open('stops.txt', 'r') as file:
 stop_name_mapping = {stop['stop_id']: stop['stop_name']
                         for stop in stops_data}
 
-
 def generate_delay():
     return stats.t.rvs(df=2, loc=2.18, scale=0.90, size=1)[0]
 
@@ -64,23 +63,18 @@ def full_time():
     # print(f"Travel time: {hours} hours, {minutes} minutes, {seconds} seconds")
     return seconds + minutes*60 + hours*3600
     
-
-
 # Example usage
 start_station_id = 'A02S'  # should be flutter input
 end_station_id = 'H11S'  # should be flutter input
-
-start_station_name = 'Inwood-207 St'
-end_station_name = 'Far Rockaway-Mott Av'
 
 print(calculate_travel_time(start_station_id, end_station_id))
 
 travelsimulation = []
 for i in range(100):
     travel_time = full_time()
-    travelsimulation.append(travel_time)
-plt.hist(travelsimulation, bins=100, density=True)
-plt.xlabel('Value')
+    travelsimulation.append(travel_time/60)
+plt.hist(travelsimulation, bins=20, density=True)
+plt.xlabel('Minutes')
 plt.ylabel('Frequency')
 
 # plt.xlim(0, 10)
