@@ -1,6 +1,7 @@
 import csv
 from datetime import datetime
 
+stop_to_id = None
 
 def calculate_travel_time(start_station_id, end_station_id):
 
@@ -20,7 +21,7 @@ def calculate_travel_time(start_station_id, end_station_id):
         stops_data = list(stops_reader)
 
     # Create a dictionary to map stop_id to stop_name
-    stop_name_mapping = {stop['stop_id']: stop['stop_name']
+    stop_to_id = {stop['stop_id']: stop['stop_name']
                          for stop in stops_data}
     
     # export to csv file 
