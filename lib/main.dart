@@ -52,7 +52,7 @@ class TestApp extends StatelessWidget{
   Widget build(BuildContext context){
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text('Detination Time')),
+        appBar: AppBar(title: const Text('Destination Time')),
         body: Center(
           child:  Column(
             children: [
