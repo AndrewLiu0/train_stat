@@ -1,5 +1,6 @@
 // ignore_for_file: unused_local_variable
 
+//import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -7,7 +8,10 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:csv/csv.dart';
 import 'dart:convert' show utf8;
-
+import 'package:web_socket_channel/web_socket_channel.dart';
+final channel = WebSocketChannel.connect(
+  Uri.parse('wss://echo.websocket.events'),
+);
 const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 void main() {
   //runApp(const MyApp());
@@ -46,7 +50,7 @@ class GetInputs extends StatelessWidget{
   }
 
 }
-
+/*
 class DropdownButtonExample extends StatefulWidget {
   const DropdownButtonExample({super.key});
 
@@ -81,7 +85,32 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
     );
   }
   }
+*/
+class DropdownSearch<String> (
+    popupProps: PopupProps.menu(
+        showSelectedItems: true,
+        disabledItemFn: (String s) => s.startsWith('I'),
+    ),
+    const items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
+    dropdownDecoratorProps: DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+            labelText: "Menu mode",
+            hintText: "country in menu mode",
+        ),
+    ),
+    onChanged: print,
+    selectedItem: "Brazil",
+)
 
+DropdownSearch<String>.multiSelection(
+    items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
+    popupProps: PopupPropsMultiSelection.menu(
+        showSelectedItems: true,
+        disabledItemFn: (String s) => s.startsWith('I'),
+    ),
+    onChanged: print,
+    final selectedItems:  ["Brazil"],
+)
 
 
 class TestApp extends StatelessWidget{
@@ -100,7 +129,7 @@ class TestApp extends StatelessWidget{
               GetInputs("My Location"),
               SizedBox(height: 10),
               GetInputs("Destination"),
-              const DropdownButtonExample(),
+              //const DropdownButtonExample(),
             ]
           )
 
