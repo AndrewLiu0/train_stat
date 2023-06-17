@@ -1,5 +1,18 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: unused_local_variable
 
+//import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:csv/csv.dart';
+import 'dart:convert' show utf8;
+import 'package:web_socket_channel/web_socket_channel.dart';
+final channel = WebSocketChannel.connect(
+  Uri.parse('wss://echo.websocket.events'),
+);
+const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 void main() {
   //runApp(const MyApp());
   runApp(
@@ -7,12 +20,7 @@ void main() {
   );
 }
 
-// class TransitApp extends StatelessWidget{
-//   @override
-//   Widget build(BuildContext build){
-//     return ; // return the completed widget
-//   }
-// }
+
 
 // ignore: must_be_immutable whatever that means
 class GetInputs extends StatelessWidget{
@@ -42,7 +50,67 @@ class GetInputs extends StatelessWidget{
   }
 
 }
+/*
+class DropdownButtonExample extends StatefulWidget {
+  const DropdownButtonExample({super.key});
 
+  @override
+  State<DropdownButtonExample> createState() => _DropdownButtonExampleState();
+}
+
+class _DropdownButtonExampleState extends State<DropdownButtonExample> {
+  String dropdownValue = list.first;
+  Widget build(BuildContext context){
+     return DropdownButton<String>(
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_downward),
+      elevation: 16,
+      style: const TextStyle(color: Colors.deepPurple),
+      underline: Container(
+        height: 2,
+        color: Colors.deepPurpleAccent,
+      ),
+      onChanged: (String? value) {
+        // This is called when the user selects an item.
+        setState(() {
+          dropdownValue = value!;
+        });
+      },
+      items: list.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+  }
+*/
+class DropdownSearch<String> (
+    popupProps: PopupProps.menu(
+        showSelectedItems: true,
+        disabledItemFn: (String s) => s.startsWith('I'),
+    ),
+    const items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
+    dropdownDecoratorProps: DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+            labelText: "Menu mode",
+            hintText: "country in menu mode",
+        ),
+    ),
+    onChanged: print,
+    selectedItem: "Brazil",
+)
+
+DropdownSearch<String>.multiSelection(
+    items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
+    popupProps: PopupPropsMultiSelection.menu(
+        showSelectedItems: true,
+        disabledItemFn: (String s) => s.startsWith('I'),
+    ),
+    onChanged: print,
+    final selectedItems:  ["Brazil"],
+)
 
 
 class TestApp extends StatelessWidget{
@@ -51,6 +119,7 @@ class TestApp extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return MaterialApp(
+      /* This creates a dropdown */
       home: Scaffold(
         appBar: AppBar(title: const Text('Destination Time')),
         body: Center(
@@ -59,7 +128,8 @@ class TestApp extends StatelessWidget{
               SizedBox(height: 50),
               GetInputs("My Location"),
               SizedBox(height: 10),
-              GetInputs("Destination")
+              GetInputs("Destination"),
+              //const DropdownButtonExample(),
             ]
           )
 
