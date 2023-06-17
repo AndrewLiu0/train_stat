@@ -123,7 +123,7 @@ class TestApp extends StatelessWidget {
                   "Tunisia",
                   'Canada'
                 ],
-                popupProps: popupProps = PopupPropsMultiSelection.menu(
+                popupProps: PopupPropsMultiSelection.menu(
                   showSelectedItems: true,
                   disabledItemFn: (String s) => s.startsWith('I'),
                 ),
