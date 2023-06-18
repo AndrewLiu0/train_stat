@@ -12,9 +12,16 @@ final channel = WebSocketChannel.connect(
   Uri.parse('wss://echo.websocket.events'),
 );
 const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+String myLocation = "";
+String destination = "";
 void main() {
   //runApp(const MyApp());
-  runApp(const TestApp());
+
+  runApp(
+    const MaterialApp(
+      home: TestApp()
+    )
+  );
 }
 
 // ignore: must_be_immutable whatever that means
@@ -44,101 +51,139 @@ class GetInputs extends StatelessWidget {
 }
 
 
-/*
-class DropdownButtonExample extends StatefulWidget {
-  const DropdownButtonExample({super.key});
-
-  @override
-  State<DropdownButtonExample> createState() => _DropdownButtonExampleState();
-}
-*/
-
-// class _DropdownButtonExampleState extends State<DropdownButtonExample> {
-//   String dropdownValue = list.first;
-//   Widget build(BuildContext context){
-//      return DropdownButton<String>(
-//       value: dropdownValue,
-//       icon: const Icon(Icons.arrow_downward),
-//       elevation: 16,
-//       style: const TextStyle(color: Colors.deepPurple),
-//       underline: Container(
-//         height: 2,
-//         color: Colors.deepPurpleAccent,
-//       ),
-//       onChanged: (String? value) {
-//         // This is called when the user selects an item.
-//         setState(() {
-//           dropdownValue = value!;
-//         });
-//       },
-//       items: list.map<DropdownMenuItem<String>>((String value) {
-//         return DropdownMenuItem<String>(
-//           value: value,
-//           child: Text(value),
-//         );
-//       }).toList(),
-//     );
-//   }
-//   }
-// */
-// ignore: non_constant_identifier_names
-
 class TestApp extends StatelessWidget {
   const TestApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        /* This creates a dropdown */
-      home: Scaffold(
-          appBar: AppBar(title: const Text('Destination Time')),
-          body: Center(
-            child: Column(children: [
-            const SizedBox(height: 50),
-            GetInputs("My Location"),
-            const SizedBox(height: 10),
-            GetInputs("Destination"),
-            //const DropdownButtonExample(),
-            DropdownSearch<String>(
-              popupProps: PopupProps.menu(
-                showSelectedItems: true,
-                disabledItemFn: (String s) => s.startsWith('I'),
-              ),
-              items: const [
-                "Brazil",
-                "Italia (Disabled)",
-                "Tunisia",
-                'Canada'
-              ],
-              dropdownDecoratorProps: const DropDownDecoratorProps(
-                dropdownSearchDecoration: InputDecoration(
-                  labelText: "Menu mode",
-                  hintText: "country in menu mode",
-                ),
-              ),
-              onChanged: print,
-              selectedItem: "Brazil",
-            ),
-
-            DropdownSearch<String>.multiSelection(
-              items: const [
-                "Brazil",
-                "Italia (Disabled)",
-                "Tunisia",
-                'Canada'
-              ],
-              popupProps: PopupPropsMultiSelection.menu(
-                showSelectedItems: true,
-                disabledItemFn: (String s) => s.startsWith('I'),
-              ),
-              onChanged: print,
-              selectedItems: const ["Brazil"],
-            )
-            ]
-          )
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Transit App"),
+      ),
+      body:  Padding(
+        padding: const EdgeInsets.all(60),
+        child: SizedBox(
+          height: 150,
+          child: ListView(
+            children: [
+              createDropdown("My Location", "myLocation"),
+              const SizedBox(height: 20),
+              createDropdown("Destination", "destination"),
+            ],
+          ),
         )
       )
-          
     );
   }
+
+DropdownSearch<String> createDropdown(String label, String inputType) {
+  void _inputType(String? station) {
+    switch (inputType) {
+      case "myLocation":
+        myLocation = station as String;
+        break;
+      case "destination":
+        destination = station as String;
+        break;
+      default:
+        throw const FormatException("Invalid input type");
+    }
+  }
+
+
+  return DropdownSearch<String>(
+    popupProps: const PopupProps.menu(
+      showSelectedItems:  true,
+      showSearchBox: true,
+      searchFieldProps: TextFieldProps(
+        cursorColor: Colors.blue,// can add other customization later
+      )
+    ),
+
+    items: const [
+      "a", 
+      "b",
+      "c", 
+      "carbine" // make these the train stations
+    ],
+
+    dropdownDecoratorProps: DropDownDecoratorProps(
+      dropdownSearchDecoration: InputDecoration(
+        labelText: label,
+        hintText: "Find your station ... " 
+      )
+    ),
+    
+    onChanged: _inputType,
+  );
+}
+
+// void _setMyLocation(String? s){
+//   myLocation = s as String;
+// }
+
+// void _setDestination(String? s){
+//   destination = s as String;
+// }
+
+
+
+// class TestApp extends StatelessWidget {
+//   const TestApp({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//         /* This creates a dropdown */
+//       home: Scaffold(
+//           appBar: AppBar(title: const Text('Destination Time')),
+//           body: Center(
+//             child: Column(children: [
+//             const SizedBox(height: 50),
+//             GetInputs("My Location"),
+//             const SizedBox(height: 10),
+//             GetInputs("Destination"),
+//             //const DropdownButtonExample(),
+//             DropdownSearch<String>(
+//               popupProps: PopupProps.menu(
+//                 showSelectedItems: true,
+//                 disabledItemFn: (String s) => s.startsWith('I'),
+//               ),
+//               items: const [
+//                 "Brazil",
+//                 "Italia (Disabled)",
+//                 "Tunisia",
+//                 'Canada'
+//               ],
+//               dropdownDecoratorProps: const DropDownDecoratorProps(
+//                 dropdownSearchDecoration: InputDecoration(
+//                   labelText: "Menu mode",
+//                   hintText: "country in menu mode",
+//                 ),
+//               ),
+//               onChanged: print,
+//               selectedItem: "Brazil",
+//             ),
+
+//             DropdownSearch<String>.multiSelection(
+//               items: const [
+//                 "Brazil",
+//                 "Italia (Disabled)",
+//                 "Tunisia",
+//                 'Canada'
+//               ],
+//               popupProps: PopupPropsMultiSelection.menu(
+//                 showSelectedItems: true,
+//                 disabledItemFn: (String s) => s.startsWith('I'),
+//               ),
+//               onChanged: print,
+//               selectedItems: const ["Brazil"],
+//             )
+//             ]
+//           )
+//         )
+//       ) 
+//     );
+//   }
+// }
 }
