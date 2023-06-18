@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable, unused_import
+// ignore_for_file: unused_import
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -11,12 +11,12 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 final channel = WebSocketChannel.connect(
   Uri.parse('wss://echo.websocket.events'),
 );
-const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+
+
 String myLocation = "";
 String destination = "";
-void main() {
-  //runApp(const MyApp());
 
+void main() {
   runApp(
     const MaterialApp(
       home: TestApp()
@@ -50,6 +50,7 @@ class TestApp extends StatelessWidget {
       )
     );
   }
+
 
 DropdownSearch<String> createDropdown(String label, String inputType) {
   void _inputType(String? station) {
@@ -88,7 +89,6 @@ DropdownSearch<String> createDropdown(String label, String inputType) {
         hintText: "Find your station ... " 
       )
     ),
-    
     onChanged: _inputType,
   );
 }
