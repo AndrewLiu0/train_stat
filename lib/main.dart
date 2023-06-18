@@ -12,28 +12,57 @@ final channel = WebSocketChannel.connect(
   Uri.parse('wss://echo.websocket.events'),
 );
 
-
 String myLocation = "";
 String destination = "";
 
 void main() {
+  
   runApp(
-    const MaterialApp(
-      home: TestApp()
+    MaterialApp(
+      home: TestApp(),
     )
   );
 }
 
+class TestApp extends StatefulWidget{
+  @override
+  _TestAppState createState() => _TestAppState();
+}
 
+class _TestAppState extends State<TestApp> {
+  String myLocation = "";
+  String destination = "";
+  List<String> stations = [];
 
-class TestApp extends StatelessWidget {
-  const TestApp({super.key});
+  @override
+  void initState(){
+    super.initState();
+    loadStations();
+  }
+
+  Future<void> loadStations() async {
+    final fileContents = await rootBundle.loadString('assets/stops.txt');
+    final csvTable = CsvToListConverter().convert(fileContents);
+
+    setState(() {
+      stations = csvTable
+          .where((row) => row.length >= 3)
+          .map((row) => row[2] as String)
+          .toList();
+    });
+
+    stations.removeAt(0);
+  }
+
+  
+
 
   @override
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Transit App"),
+        title: Text("Transit App"),
+        
       ),
       body:  Padding(
         padding: const EdgeInsets.all(60),
@@ -44,6 +73,7 @@ class TestApp extends StatelessWidget {
               createDropdown("My Location", "myLocation"),
               const SizedBox(height: 20),
               createDropdown("Destination", "destination"),
+              
             ],
           ),
         )
@@ -76,12 +106,7 @@ DropdownSearch<String> createDropdown(String label, String inputType) {
       )
     ),
 
-    items: const [
-      "a", 
-      "b",
-      "c", 
-      "carbine" // make these the train stations
-    ],
+    items: stations,
 
     dropdownDecoratorProps: DropDownDecoratorProps(
       dropdownSearchDecoration: InputDecoration(
