@@ -24,31 +24,6 @@ void main() {
   );
 }
 
-// ignore: must_be_immutable whatever that means
-class GetInputs extends StatelessWidget {
-  String purpose;
-  GetInputs(this.purpose,
-      {super.key}); //used super.key if I want it from parent class
-
-  TextEditingController textController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-        width: 250,
-        child: TextField(
-            obscureText: false,
-            decoration: InputDecoration(
-                border: const OutlineInputBorder(), labelText: purpose
-            )
-        )
-    );
-  }
-
-  String getInput() {
-    return textController.text;
-  }
-}
 
 
 class TestApp extends StatelessWidget {
@@ -117,73 +92,4 @@ DropdownSearch<String> createDropdown(String label, String inputType) {
     onChanged: _inputType,
   );
 }
-
-// void _setMyLocation(String? s){
-//   myLocation = s as String;
-// }
-
-// void _setDestination(String? s){
-//   destination = s as String;
-// }
-
-
-
-// class TestApp extends StatelessWidget {
-//   const TestApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//         /* This creates a dropdown */
-//       home: Scaffold(
-//           appBar: AppBar(title: const Text('Destination Time')),
-//           body: Center(
-//             child: Column(children: [
-//             const SizedBox(height: 50),
-//             GetInputs("My Location"),
-//             const SizedBox(height: 10),
-//             GetInputs("Destination"),
-//             //const DropdownButtonExample(),
-//             DropdownSearch<String>(
-//               popupProps: PopupProps.menu(
-//                 showSelectedItems: true,
-//                 disabledItemFn: (String s) => s.startsWith('I'),
-//               ),
-//               items: const [
-//                 "Brazil",
-//                 "Italia (Disabled)",
-//                 "Tunisia",
-//                 'Canada'
-//               ],
-//               dropdownDecoratorProps: const DropDownDecoratorProps(
-//                 dropdownSearchDecoration: InputDecoration(
-//                   labelText: "Menu mode",
-//                   hintText: "country in menu mode",
-//                 ),
-//               ),
-//               onChanged: print,
-//               selectedItem: "Brazil",
-//             ),
-
-//             DropdownSearch<String>.multiSelection(
-//               items: const [
-//                 "Brazil",
-//                 "Italia (Disabled)",
-//                 "Tunisia",
-//                 'Canada'
-//               ],
-//               popupProps: PopupPropsMultiSelection.menu(
-//                 showSelectedItems: true,
-//                 disabledItemFn: (String s) => s.startsWith('I'),
-//               ),
-//               onChanged: print,
-//               selectedItems: const ["Brazil"],
-//             )
-//             ]
-//           )
-//         )
-//       ) 
-//     );
-//   }
-// }
 }
