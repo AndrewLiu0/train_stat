@@ -48,6 +48,7 @@ class DropdownButtonExample extends StatefulWidget {
   @override
   State<DropdownButtonExample> createState() => _DropdownButtonExampleState();
 }
+*/
 
 class _DropdownButtonExampleState extends State<DropdownButtonExample> {
   String dropdownValue = list.first;
