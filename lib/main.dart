@@ -5,6 +5,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:csv/csv.dart';
+import 'package:collection/collection.dart';
 import 'dart:convert' show utf8;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -34,6 +35,8 @@ class _TestAppState extends State<TestApp> {
   String destination = "";
   List<String> stations = [];
 
+
+
   @override
   void initState(){
     super.initState();
@@ -49,6 +52,7 @@ class _TestAppState extends State<TestApp> {
           .where((row) => row.length >= 3)
           .map((row) => row[2] as String)
           .toList();
+      stations = stations.whereIndexed((index, _) => (index - 1) % 3 == 0).toList();
     });
 
     stations.removeAt(0);
