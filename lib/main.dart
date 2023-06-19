@@ -12,20 +12,24 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 final channel = WebSocketChannel.connect(
   Uri.parse('wss://echo.websocket.events'),
 );
-
+/*
+StreamBuilder(
+  stream: channel.stream,
+  builder: (context, snapshot) {
+    return Text(snapshot.hasData ? '${snapshot.data}' : '');
+  },
+)
+*/
 String myLocation = "";
 String destination = "";
 
 void main() {
-  
-  runApp(
-    MaterialApp(
-      home: TestApp(),
-    )
-  );
+  runApp(MaterialApp(
+    home: TestApp(),
+  ));
 }
 
-class TestApp extends StatefulWidget{
+class TestApp extends StatefulWidget {
   @override
   _TestAppState createState() => _TestAppState();
 }
@@ -35,10 +39,8 @@ class _TestAppState extends State<TestApp> {
   String destination = "";
   List<String> stations = [];
 
-
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
     loadStations();
   }
@@ -52,73 +54,59 @@ class _TestAppState extends State<TestApp> {
           .where((row) => row.length >= 3)
           .map((row) => row[2] as String)
           .toList();
-      stations = stations.whereIndexed((index, _) => (index - 1) % 3 == 0).toList();
+      stations =
+          stations.whereIndexed((index, _) => (index - 1) % 3 == 0).toList();
     });
 
     stations.removeAt(0);
   }
 
-  
-
-
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Transit App"),
-        
-      ),
-      body:  Padding(
-        padding: const EdgeInsets.all(60),
-        child: SizedBox(
-          height: 150,
-          child: ListView(
-            children: [
-              createDropdown("My Location", "myLocation"),
-              const SizedBox(height: 20),
-              createDropdown("Destination", "destination"),
-              
-            ],
-          ),
-        )
-      )
+        appBar: AppBar(
+          title: Text("Transit App"),
+        ),
+        body: Padding(
+            padding: const EdgeInsets.all(60),
+            child: SizedBox(
+              height: 150,
+              child: ListView(
+                children: [
+                  createDropdown("My Location", "myLocation"),
+                  const SizedBox(height: 20),
+                  createDropdown("Destination", "destination"),
+                ],
+              ),
+            )));
+  }
+
+  DropdownSearch<String> createDropdown(String label, String inputType) {
+    void _inputType(String? station) {
+      switch (inputType) {
+        case "myLocation":
+          myLocation = station as String;
+          break;
+        case "destination":
+          destination = station as String;
+          break;
+        default:
+          throw const FormatException("Invalid input type");
+      }
+    }
+
+    return DropdownSearch<String>(
+      popupProps: const PopupProps.menu(
+          showSelectedItems: true,
+          showSearchBox: true,
+          searchFieldProps: TextFieldProps(
+            cursorColor: Colors.blue, // can add other customization later
+          )),
+      items: stations,
+      dropdownDecoratorProps: DropDownDecoratorProps(
+          dropdownSearchDecoration: InputDecoration(
+              labelText: label, hintText: "Find your station ... ")),
+      onChanged: _inputType,
     );
   }
-
-
-DropdownSearch<String> createDropdown(String label, String inputType) {
-  void _inputType(String? station) {
-    switch (inputType) {
-      case "myLocation":
-        myLocation = station as String;
-        break;
-      case "destination":
-        destination = station as String;
-        break;
-      default:
-        throw const FormatException("Invalid input type");
-    }
-  }
-
-
-  return DropdownSearch<String>(
-    popupProps: const PopupProps.menu(
-      showSelectedItems:  true,
-      showSearchBox: true,
-      searchFieldProps: TextFieldProps(
-        cursorColor: Colors.blue,// can add other customization later
-      )
-    ),
-
-    items: stations,
-
-    dropdownDecoratorProps: DropDownDecoratorProps(
-      dropdownSearchDecoration: InputDecoration(
-        labelText: label,
-        hintText: "Find your station ... " 
-      )
-    ),
-    onChanged: _inputType,
-  );
-}
 }
