@@ -1,7 +1,6 @@
 // ignore_for_file: unused_import
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:csv/csv.dart';
@@ -13,6 +12,13 @@ final channel = WebSocketChannel.connect(
   Uri.parse('wss://echo.websocket.events'),
 );
 /*
+void _sendMessage() {
+    if (_controller.text.isNotEmpty) {
+      _channel.sink.add(_controller.text);
+    }
+  }
+  
+
 StreamBuilder(
   stream: channel.stream,
   builder: (context, snapshot) {
@@ -47,7 +53,7 @@ class _TestAppState extends State<TestApp> {
 
   Future<void> loadStations() async {
     final fileContents = await rootBundle.loadString('assets/stops.txt');
-    final csvTable = CsvToListConverter().convert(fileContents);
+    final csvTable = const CsvToListConverter().convert(fileContents);
 
     setState(() {
       stations = csvTable
@@ -61,21 +67,56 @@ class _TestAppState extends State<TestApp> {
     stations.removeAt(0);
   }
 
+  bool _showButton = false;
+  void changeStatus() {
+    setState(() {
+      _showButton = !_showButton;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+      primary: Colors.black87,
+      minimumSize: const Size(88, 36),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(2)),
+      ),
+    );
     return Scaffold(
         appBar: AppBar(
-          title: Text("Transit App"),
+          title: const Text("Transit App"),
         ),
         body: Padding(
             padding: const EdgeInsets.all(60),
             child: SizedBox(
               height: 150,
               child: ListView(
-                children: [
+                children: <Widget>[
                   createDropdown("My Location", "myLocation"),
                   const SizedBox(height: 20),
                   createDropdown("Destination", "destination"),
+                  TextButton(
+                    /*
+                    style: ButtonStyle(
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                    ),
+                    */
+                    style: flatButtonStyle,
+                    onPressed: (/* _sendMessage() */) {
+                      /* send the message to the websocket, then have it relay the message back */
+                    },
+                    child: const Text('Calculate time between these stations'),
+                  ),
+                  _showButton
+                      ? const SizedBox.shrink()
+                      : TextButton(
+                          /* return the app to its original state */
+                          onPressed: changeStatus,
+                          child: const Text("Calculate a different route"),
+                        ),
                 ],
               ),
             )));
@@ -109,4 +150,11 @@ class _TestAppState extends State<TestApp> {
       onChanged: _inputType,
     );
   }
+/*
+  void dispose() {
+    _channel.sink.close();
+    _controller.dispose();
+    super.dispose();
+  }
+  */
 }
