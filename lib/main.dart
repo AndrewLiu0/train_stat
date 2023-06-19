@@ -13,6 +13,13 @@ final channel = WebSocketChannel.connect(
   Uri.parse('wss://echo.websocket.events'),
 );
 /*
+void _sendMessage() {
+    if (_controller.text.isNotEmpty) {
+      _channel.sink.add(_controller.text);
+    }
+  }
+  
+
 StreamBuilder(
   stream: channel.stream,
   builder: (context, snapshot) {
@@ -63,6 +70,14 @@ class _TestAppState extends State<TestApp> {
 
   @override
   Widget build(BuildContext context) {
+    final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+      primary: Colors.black87,
+      minimumSize: Size(88, 36),
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(2)),
+      ),
+    );
     return Scaffold(
         appBar: AppBar(
           title: Text("Transit App"),
@@ -76,6 +91,19 @@ class _TestAppState extends State<TestApp> {
                   createDropdown("My Location", "myLocation"),
                   const SizedBox(height: 20),
                   createDropdown("Destination", "destination"),
+                  TextButton(
+                    /*
+                    style: ButtonStyle(
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                    ),
+                    */
+                    style: flatButtonStyle,
+                    onPressed: (/* _sendMessage() */) {
+                      /* send the message to the websocket, then have it relay the message back */
+                    },
+                    child: const Text('Calculate time between these stations'),
+                  )
                 ],
               ),
             )));
@@ -109,4 +137,11 @@ class _TestAppState extends State<TestApp> {
       onChanged: _inputType,
     );
   }
+/*
+  void dispose() {
+    _channel.sink.close();
+    _controller.dispose();
+    super.dispose();
+  }
+  */
 }
