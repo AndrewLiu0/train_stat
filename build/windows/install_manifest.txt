@@ -1,0 +1,11 @@
+C:/Users/mali/Desktop/train_stat/build/windows/runner/Debug/data/icudtl.dat
+C:/Users/mali/Desktop/train_stat/build/windows/runner/Debug/flutter_windows.dll
+C:/Users/mali/Desktop/train_stat/build/windows/runner/Debug/data/flutter_assets/AssetManifest.bin
+C:/Users/mali/Desktop/train_stat/build/windows/runner/Debug/data/flutter_assets/AssetManifest.json
+C:/Users/mali/Desktop/train_stat/build/windows/runner/Debug/data/flutter_assets/assets/stops.txt
+C:/Users/mali/Desktop/train_stat/build/windows/runner/Debug/data/flutter_assets/FontManifest.json
+C:/Users/mali/Desktop/train_stat/build/windows/runner/Debug/data/flutter_assets/fonts/MaterialIcons-Regular.otf
+C:/Users/mali/Desktop/train_stat/build/windows/runner/Debug/data/flutter_assets/kernel_blob.bin
+C:/Users/mali/Desktop/train_stat/build/windows/runner/Debug/data/flutter_assets/NOTICES.Z
+C:/Users/mali/Desktop/train_stat/build/windows/runner/Debug/data/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf
+C:/Users/mali/Desktop/train_stat/build/windows/runner/Debug/data/flutter_assets/shaders/ink_sparkle.frag

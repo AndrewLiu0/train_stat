@@ -1,140 +1,112 @@
-// ignore_for_file: unused_local_variable
-
-//import 'package:web_socket_channel/web_socket_channel.dart';
+// ignore_for_file: unused_import
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:csv/csv.dart';
+import 'package:collection/collection.dart';
 import 'dart:convert' show utf8;
 import 'package:web_socket_channel/web_socket_channel.dart';
+
 final channel = WebSocketChannel.connect(
   Uri.parse('wss://echo.websocket.events'),
 );
-const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
-void main() {
-  //runApp(const MyApp());
-  runApp(
-    TestApp()
-  );
-}
-
-
-
-// ignore: must_be_immutable whatever that means
-class GetInputs extends StatelessWidget{
-
-  String purpose;
-  GetInputs(this.purpose, {super.key});//used super.key if I want it from parent class
-
-  TextEditingController textController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context){
-    
-    return SizedBox(
-      width:250,
-      child: TextField(
-        obscureText: false,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: purpose
-        )
-      )
-    );
-  }
-
-  String getInput(){
-    return textController.text;
-  }
-
-}
 /*
-class DropdownButtonExample extends StatefulWidget {
-  const DropdownButtonExample({super.key});
+StreamBuilder(
+  stream: channel.stream,
+  builder: (context, snapshot) {
+    return Text(snapshot.hasData ? '${snapshot.data}' : '');
+  },
+)
+*/
+String myLocation = "";
+String destination = "";
 
-  @override
-  State<DropdownButtonExample> createState() => _DropdownButtonExampleState();
+void main() {
+  runApp(MaterialApp(
+    home: TestApp(),
+  ));
 }
 
-class _DropdownButtonExampleState extends State<DropdownButtonExample> {
-  String dropdownValue = list.first;
-  Widget build(BuildContext context){
-     return DropdownButton<String>(
-      value: dropdownValue,
-      icon: const Icon(Icons.arrow_downward),
-      elevation: 16,
-      style: const TextStyle(color: Colors.deepPurple),
-      underline: Container(
-        height: 2,
-        color: Colors.deepPurpleAccent,
-      ),
-      onChanged: (String? value) {
-        // This is called when the user selects an item.
-        setState(() {
-          dropdownValue = value!;
-        });
-      },
-      items: list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
-  }
-  }
-*/
-class DropdownSearch<String> (
-    popupProps: PopupProps.menu(
-        showSelectedItems: true,
-        disabledItemFn: (String s) => s.startsWith('I'),
-    ),
-    const items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
-    dropdownDecoratorProps: DropDownDecoratorProps(
-        dropdownSearchDecoration: InputDecoration(
-            labelText: "Menu mode",
-            hintText: "country in menu mode",
-        ),
-    ),
-    onChanged: print,
-    selectedItem: "Brazil",
-)
+class TestApp extends StatefulWidget {
+  @override
+  _TestAppState createState() => _TestAppState();
+}
 
-DropdownSearch<String>.multiSelection(
-    items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
-    popupProps: PopupPropsMultiSelection.menu(
-        showSelectedItems: true,
-        disabledItemFn: (String s) => s.startsWith('I'),
-    ),
-    onChanged: print,
-    final selectedItems:  ["Brazil"],
-)
-
-
-class TestApp extends StatelessWidget{
-  const TestApp({super.key});
+class _TestAppState extends State<TestApp> {
+  String myLocation = "";
+  String destination = "";
+  List<String> stations = [];
 
   @override
-  Widget build(BuildContext context){
-    return MaterialApp(
-      /* This creates a dropdown */
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Destination Time')),
-        body: Center(
-          child:  Column(
-            children: [
-              SizedBox(height: 50),
-              GetInputs("My Location"),
-              SizedBox(height: 10),
-              GetInputs("Destination"),
-              //const DropdownButtonExample(),
-            ]
-          )
+  void initState() {
+    super.initState();
+    loadStations();
+  }
 
-        )
-      )
+  Future<void> loadStations() async {
+    final fileContents = await rootBundle.loadString('assets/stops.txt');
+    final csvTable = CsvToListConverter().convert(fileContents);
+
+    setState(() {
+      stations = csvTable
+          .where((row) => row.length >= 3)
+          .map((row) => row[2] as String)
+          .toList();
+      stations =
+          stations.whereIndexed((index, _) => (index - 1) % 3 == 0).toList();
+    });
+
+    stations.removeAt(0);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Transit App"),
+        ),
+        body: Padding(
+            padding: const EdgeInsets.all(60),
+            child: SizedBox(
+              height: 150,
+              child: ListView(
+                children: [
+                  createDropdown("My Location", "myLocation"),
+                  const SizedBox(height: 20),
+                  createDropdown("Destination", "destination"),
+                ],
+              ),
+            )));
+  }
+
+  DropdownSearch<String> createDropdown(String label, String inputType) {
+    void _inputType(String? station) {
+      switch (inputType) {
+        case "myLocation":
+          myLocation = station as String;
+          break;
+        case "destination":
+          destination = station as String;
+          break;
+        default:
+          throw const FormatException("Invalid input type");
+      }
+    }
+
+    return DropdownSearch<String>(
+      popupProps: const PopupProps.menu(
+          showSelectedItems: true,
+          showSearchBox: true,
+          searchFieldProps: TextFieldProps(
+            cursorColor: Colors.blue, // can add other customization later
+          )),
+      items: stations,
+      dropdownDecoratorProps: DropDownDecoratorProps(
+          dropdownSearchDecoration: InputDecoration(
+              labelText: label, hintText: "Find your station ... ")),
+      onChanged: _inputType,
     );
   }
 }
