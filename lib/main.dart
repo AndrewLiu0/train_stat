@@ -39,7 +39,7 @@ class TestApp extends StatefulWidget {
 
 class _TestAppState extends State<TestApp> {
   final _channel = WebSocketChannel.connect(
-    Uri.parse('wss://echo.websocket.events'),
+    Uri.parse('ws://localhost:8765'),
   );
   String myLocation = "";
   String destination = "";
