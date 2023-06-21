@@ -14,8 +14,9 @@ async def start_server():
 
 loop = asyncio.get_event_loop()
 
-start_name = '34 St-Penn Station' # default value? should be a empty string.
-end_name = 'Chambers St' # default value for now, should be empty.
+start_name = '34 St-Penn Station' 
+end_name = 'Chambers St' 
+
 async def get_inputs(websocket, path):
     async for message in websocket:
         data = json.loads(message)
@@ -25,7 +26,8 @@ async def get_inputs(websocket, path):
         response = {'time': calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name))}
         timeResult = json.dumps(response)
 
-        
+        # sends the result back to the flutter to be displayed
+
         await websocket.send(timeResult)
         loop.run_until_complete(start_server())
         loop.run_forever()
@@ -52,8 +54,8 @@ def generate_delay():
 def calculate_travel_time(start_station_id, end_station_id):
     # organized into a list of dictionaries
     # the list represents the row and correpsonding fields in the dictionary are searchable
-
     # Find relevant trips
+    
     relevant_trips = []
     for row in stop_times_data:
         if row['stop_id'] == start_station_id:
@@ -89,19 +91,16 @@ def full_time():
 
     return seconds + minutes*60 + hours*3600
     
-# Example usage
-start_station_id = start_name  # provided by flutter, done
-end_station_id = end_name  # provided by flutter
+# Start and end station inputs
+start_station_id = start_name 
+end_station_id = end_name  
 
 async def send_image():
     async with websockets.connect('ws://localhost:8765') as websocket:
         with open(plt, 'rb') as image_file:
-
             image_bytes = image_file.read()
-
             image_base64 = base64.b64encode(image_bytes).decode('utf-8')
-
-             #Send the image data over the WebSocket
+             # sends the image over, can work on this after we get the main features to work
             await websocket.send(image_base64)
 
     """ m = print(calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name)))
@@ -111,8 +110,6 @@ async def send_image():
             #message2 = img
             #await websocket.send(message)
            # await websocket.send(message2)
-
-
 # loop.run_until_complete(send_input())
 # loop.run_until_complete(send_image())
 

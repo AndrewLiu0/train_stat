@@ -8,14 +8,6 @@ import 'package:collection/collection.dart';
 import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-/*
-StreamBuilder(
-  stream: channel.stream,
-  builder: (context, snapshot) {
-    return Text(snapshot.hasData ? '${snapshot.data}' : '');
-  },
-)
-*/
 String myLocation = "";
 String destination = "";
 
@@ -110,6 +102,7 @@ class _TestAppState extends State<TestApp> {
             ),
             const SizedBox(height: 20),
             StreamBuilder(
+              /* PROBLEMATIC */
               stream: _channel.stream,
               builder: (context, snapshot) {
                 if (!_showButton) {
@@ -127,6 +120,7 @@ class _TestAppState extends State<TestApp> {
                     child: const Text("Calculate a Different Route"),
                   )
                 : const SizedBox.shrink(),
+            /* PROBLEMATIC */
           ],
         ),
       ),
@@ -163,19 +157,6 @@ class _TestAppState extends State<TestApp> {
     );
   }
 
-/*
-  void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      _channel.sink.add(_controller.text);
-    }
-  }
-
-  void dispose() {
-    _channel.sink.close();
-    _controller.dispose();
-    super.dispose();
-  }
-  */
   void sendMessage() {
     if (myLocation != "" && destination != "") {
       var message =
