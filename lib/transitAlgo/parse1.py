@@ -2,6 +2,16 @@ import csv
 from datetime import datetime
 import scipy.stats as stats
 
+import asyncio
+import websockets
+start = ""
+end = ""
+async def get_inputs():
+    async with websockets.connect('wss://echo.websocket.events') as websocket:
+        start = await websocket.recv()        
+        end = await websocket.recv()
+        except websockets.ConnectionClosedOK:
+            break
 def generate_delay():
     return stats.t.rvs(df=2, loc=2.18, scale=0.90, size=1)
 
@@ -56,4 +66,13 @@ def calculate_travel_time(start_station_id, end_station_id):
 start_station_id = 'A02S'  # should be flutter input
 end_station_id = 'H11S'  # should be flutter input
 
-calculate_travel_time(start_station_id, end_station_id)
+float f = calculate_travel_time(start_station_id, end_station_id)
+
+async def send_input():
+    async with websockets.connect('wss://echo.websocket.events') as websocket:
+        while True:
+            message = f
+            await websocket.send(message)
+
+ loop = asyncio.get_event_loop()
+ loop.run_until_complete(send_input())
