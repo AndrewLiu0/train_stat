@@ -103,7 +103,7 @@ class _TestAppState extends State<TestApp> {
             StreamBuilder(
               stream: _channel.stream,
               builder: (context, snapshot) {
-                if (_showButton) {
+                if (!_showButton) {
                   return Text(snapshot.hasData ? '${snapshot.data}' : '');
                 } else {
                   return const SizedBox.shrink();
