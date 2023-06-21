@@ -5,7 +5,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:csv/csv.dart';
 import 'package:collection/collection.dart';
-import 'dart:convert' show utf8;
+import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 /*
@@ -49,7 +49,8 @@ class _TestAppState extends State<TestApp> {
   void get_results() {
     _channel.stream.listen((data) {
       setState(() {
-        result_time = data;
+        var response = json.decode("data");
+        result_time = response['time'];
       });
     });
   }
@@ -177,8 +178,9 @@ class _TestAppState extends State<TestApp> {
   */
   void sendMessage() {
     if (myLocation != "" && destination != "") {
-      _channel.sink.add(myLocation);
-      _channel.sink.add(destination);
+      var message =
+          json.encode({'location': myLocation, 'destination': destination});
+      _channel.sink.add(message);
     }
   }
 

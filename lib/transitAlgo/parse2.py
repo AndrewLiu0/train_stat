@@ -2,6 +2,7 @@ import asyncio
 import base64
 import csv
 from datetime import datetime, timedelta
+import json
 import scipy.stats as stats
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,17 +12,24 @@ async def start_server():
     async with websockets.serve(get_inputs, "localhost", 8765):
         await asyncio.Future()
 
+loop = asyncio.get_event_loop()
 # fields needed for algorithm generation
 start_name = '34 St-Penn Station' # default value? should be a empty string.
 end_name = 'Chambers St' # default value for now, should be empty.
-async def get_inputs():
-     async with websockets.connect('ws://localhost:8765') as websocket:
-             start_name = await websocket.recv()
-             end_name = await websocket.recv() # only 2 inputs
+async def get_inputs(websocket, path):
+    async for message in websocket:
+        data = json.loads(message)
+        start_name = data['location']
+        end_name = data['destination']
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(start_server())
-loop.run_until_complete(get_inputs())
+        response = {'time': calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name))}
+        response_json = json.dumps(response)
+
+        
+        await websocket.send(response_json)
+        loop.run_until_complete(start_server())
+        loop.run_forever()
+
 # read stop_times.txt file
 with open('stop_times.txt', 'r') as file:
     stop_times_reader = csv.DictReader(file)
@@ -99,17 +107,17 @@ async def send_image():
              #Send the image data over the WebSocket
             await websocket.send(image_base64)
 
-m = print(calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name)))
-async def send_input():
-    async with websockets.connect('ws://localhost:8765') as websocket:
-            message = m
+    """ m = print(calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name)))
+    async def send_input():
+        async with websockets.connect('ws://localhost:8765') as websocket:
+            message = m """
             #message2 = img
-            await websocket.send(message)
+            #await websocket.send(message)
            # await websocket.send(message2)
 
 
-loop.run_until_complete(send_input())
-loop.run_until_complete(send_image())
+# loop.run_until_complete(send_input())
+# loop.run_until_complete(send_image())
 
 travelsimulation = []
 for i in range(100):
