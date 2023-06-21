@@ -48,12 +48,12 @@ class _TestAppState extends State<TestApp> {
   String destination = "";
   List<String> stations = [];
 
-  /*
+  
   void initState() {
     super.initState();
     loadStations();
   }
-  */
+  
 
   Future<void> loadStations() async {
     final fileContents = await rootBundle.loadString('assets/stops.txt');
