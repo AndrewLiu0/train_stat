@@ -9,13 +9,6 @@ import 'dart:convert' show utf8;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 /*
-void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      _channel.sink.add(_controller.text);
-    }
-  }
-  
-
 StreamBuilder(
   stream: channel.stream,
   builder: (context, snapshot) {
@@ -47,13 +40,19 @@ class _TestAppState extends State<TestApp> {
   String myLocation = "";
   String destination = "";
   List<String> stations = [];
-
-  
+  String result_time = "";
   void initState() {
     super.initState();
     loadStations();
   }
-  
+
+  void get_results() {
+    _channel.stream.listen((data) {
+      setState(() {
+        result_time = data;
+      });
+    });
+  }
 
   Future<void> loadStations() async {
     final fileContents = await rootBundle.loadString('assets/stops.txt');
@@ -112,8 +111,9 @@ class _TestAppState extends State<TestApp> {
             StreamBuilder(
               stream: _channel.stream,
               builder: (context, snapshot) {
-                if (_showButton) {
-                  return Text(snapshot.hasData ? '${snapshot.data}' : '');
+                if (!_showButton) {
+                  return Text(snapshot.hasData ? result_time : '');
+                  // something here that would take the latest mesage
                 } else {
                   return const SizedBox.shrink();
                 }
