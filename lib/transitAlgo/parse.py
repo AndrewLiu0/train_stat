@@ -1,6 +1,17 @@
 import csv
 from datetime import datetime
 
+import asyncio
+import websockets
+
+async def get_input():
+    async with websockets.connect('wss://echo.websocket.events') as websocket:
+        while True:
+            start = await websocket.recv()
+            end = await websocket.recv() # this should be the order in which the two messages are sent in to the server? needs looking into
+
+#loop = asyncio.get_event_loop()
+#loop.run_until_complete(send_input())
 
 def calculate_travel_time(start_station_id, end_station_id):
 
@@ -80,4 +91,14 @@ def calculate_travel_time(start_station_id, end_station_id):
 start_station_id = 'A02S'  # Replace with the desired start station ID
 end_station_id = 'H11S'  # Replace with the desired end station ID
 
-calculate_travel_time(start_station_id, end_station_id)
+double d = calculate_travel_time(start_station_id, end_station_id)
+
+
+async def send_input():
+    async with websockets.connect('ws://localhost:8765') as websocket:
+        while True:
+            message = d
+            await websocket.send(message)
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(send_input())
