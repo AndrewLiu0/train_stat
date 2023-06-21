@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import scipy.stats as stats
 import numpy as np
 import matplotlib.pyplot as plt
+import websockets
 
 # fields needed for algorithm generation
 start_name = '34 St-Penn Station'
