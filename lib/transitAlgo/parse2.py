@@ -9,7 +9,7 @@ import websockets
 start_name = '34 St-Penn Station'
 end_name = 'Chambers St'
 async def get_inputs():
-     async with websockets.connect('ws://localhost:8765') as websocket:
+     async with websockets.connect('wss://echo.websocket.events') as websocket:
          while True:
              start_name = websocket.recv()
              end_name = websocket.recv()
@@ -83,7 +83,7 @@ end_station_id = end_name  # should be flutter input
 
 m = print(calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name)))
 async def send_input():
-    async with websockets.connect('ws://localhost:8765') as websocket:
+    async with websockets.connect('wss://echo.websocket.events') as websocket:
         while True:
             message = m
             await websocket.send(message)
