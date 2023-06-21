@@ -1,10 +1,12 @@
 import asyncio
+import base64
 import csv
 from datetime import datetime, timedelta
 import scipy.stats as stats
 import numpy as np
 import matplotlib.pyplot as plt
 import websockets
+
 async def start_server():
     async with websockets.serve(get_inputs, "localhost", 8765):
         await asyncio.Future()
