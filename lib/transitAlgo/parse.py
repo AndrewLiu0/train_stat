@@ -91,7 +91,7 @@ def calculate_travel_time(start_station_id, end_station_id):
 start_station_id = 'A02S'  # Replace with the desired start station ID
 end_station_id = 'H11S'  # Replace with the desired end station ID
 
-double d = calculate_travel_time(start_station_id, end_station_id)
+d = calculate_travel_time(start_station_id, end_station_id)
 
 
 async def send_input():
