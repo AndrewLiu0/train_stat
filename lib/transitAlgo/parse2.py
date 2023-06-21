@@ -25,11 +25,11 @@ async def get_inputs(websocket, path):
 
         response = {'time': calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name))}
         timeResult = json.dumps(response)
-
         # sends the result back to the flutter to be displayed
-
+        
         await websocket.send(timeResult)
         loop.run_until_complete(start_server())
+        # loop.run_until_complete(send_graph())
         loop.run_forever()
 
 # read stop_times.txt file
@@ -55,7 +55,7 @@ def calculate_travel_time(start_station_id, end_station_id):
     # organized into a list of dictionaries
     # the list represents the row and correpsonding fields in the dictionary are searchable
     # Find relevant trips
-    
+
     relevant_trips = []
     for row in stop_times_data:
         if row['stop_id'] == start_station_id:
@@ -95,7 +95,7 @@ def full_time():
 start_station_id = start_name 
 end_station_id = end_name  
 
-async def send_image():
+async def send_graph():
     async with websockets.connect('ws://localhost:8765') as websocket:
         with open(plt, 'rb') as image_file:
             image_bytes = image_file.read()
