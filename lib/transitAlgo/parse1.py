@@ -65,8 +65,7 @@ def calculate_travel_time(start_station_id, end_station_id):
 # Example usage
 start_station_id = 'A02S'  # should be flutter input
 end_station_id = 'H11S'  # should be flutter input
-
-float f = calculate_travel_time(start_station_id, end_station_id)
+f = calculate_travel_time(start_station_id, end_station_id)
 
 async def send_input():
     async with websockets.connect('wss://echo.websocket.events') as websocket:
