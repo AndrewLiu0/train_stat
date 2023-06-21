@@ -5,6 +5,9 @@ import scipy.stats as stats
 import numpy as np
 import matplotlib.pyplot as plt
 import websockets
+async def start_server():
+    async with websockets.serve(get_inputs, "localhost", 8765):
+        await asyncio.Future()
 
 # fields needed for algorithm generation
 start_name = '34 St-Penn Station' # default value? should be a empty string.
@@ -14,7 +17,9 @@ async def get_inputs():
              start_name = await websocket.recv()
              end_name = await websocket.recv() # only 2 inputs
 
-asyncio.get_event_loop().run_until_complete(get_inputs())
+loop = asyncio.get_event_loop()
+loop.run_until_complete(start_server())
+loop.run_until_complete(get_inputs())
 # read stop_times.txt file
 with open('stop_times.txt', 'r') as file:
     stop_times_reader = csv.DictReader(file)
@@ -100,7 +105,7 @@ async def send_input():
             await websocket.send(message)
            # await websocket.send(message2)
 
-loop = asyncio.get_event_loop()
+
 loop.run_until_complete(send_input())
 loop.run_until_complete(send_image())
 
