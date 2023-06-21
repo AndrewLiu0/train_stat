@@ -35,15 +35,23 @@ class TestApp extends StatefulWidget {
 
 class _TestAppState extends State<TestApp> {
   final _channel = WebSocketChannel.connect(
-    Uri.parse('wss://echo.websocket.events'),
+    Uri.parse('ws://localhost:8765'),
   );
   String myLocation = "";
   String destination = "";
   List<String> stations = [];
-
+  String result_time = "";
   void initState() {
     super.initState();
     loadStations();
+  }
+
+  void get_results() {
+    _channel.stream.listen((data) {
+      setState(() {
+        result_time = data;
+      });
+    });
   }
 
   Future<void> loadStations() async {
@@ -104,7 +112,8 @@ class _TestAppState extends State<TestApp> {
               stream: _channel.stream,
               builder: (context, snapshot) {
                 if (!_showButton) {
-                  return Text(snapshot.hasData ? '${snapshot.data}' : '');
+                  return Text(snapshot.hasData ? result_time : '');
+                  // something here that would take the latest mesage
                 } else {
                   return const SizedBox.shrink();
                 }

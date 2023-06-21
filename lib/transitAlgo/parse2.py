@@ -7,14 +7,14 @@ import matplotlib.pyplot as plt
 import websockets
 
 # fields needed for algorithm generation
-start_name = '34 St-Penn Station'
-end_name = 'Chambers St'
+start_name = '34 St-Penn Station' # default value? should be a empty string.
+end_name = 'Chambers St' # default value for now, should be empty.
 async def get_inputs():
-     async with websockets.connect('wss://echo.websocket.events') as websocket:
-         while True:
-             start_name = websocket.recv()
-             end_name = websocket.recv()
+     async with websockets.connect('ws://localhost:8765') as websocket:
+             start_name = await websocket.recv()
+             end_name = await websocket.recv() # only 2 inputs
 
+asyncio.get_event_loop().run_until_complete(get_inputs())
 # read stop_times.txt file
 with open('stop_times.txt', 'r') as file:
     stop_times_reader = csv.DictReader(file)
@@ -80,19 +80,29 @@ def full_time():
 start_station_id = start_name  # should be flutter input
 end_station_id = end_name  # should be flutter input
 
+async def send_image():
+    async with websockets.connect('ws://localhost:8765') as websocket:
+        with open(plt, 'rb') as image_file:
+          # Read the image file as bytes
+            image_bytes = image_file.read()
 
+             #Encode the image as Base64
+            image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+
+             #Send the image data over the WebSocket
+            await websocket.send(image_base64)
 
 m = print(calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name)))
 async def send_input():
-    async with websockets.connect('wss://echo.websocket.events') as websocket:
-        while True:
+    async with websockets.connect('ws://localhost:8765') as websocket:
             message = m
-            message2 = img
+            #message2 = img
             await websocket.send(message)
-            await websocket.send(message2)
+           # await websocket.send(message2)
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(send_input())
+loop.run_until_complete(send_image())
 
 travelsimulation = []
 for i in range(100):
