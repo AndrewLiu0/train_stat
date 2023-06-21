@@ -1,3 +1,4 @@
+import asyncio
 import csv
 from datetime import datetime, timedelta
 import scipy.stats as stats
@@ -86,10 +87,13 @@ async def send_input():
     async with websockets.connect('wss://echo.websocket.events') as websocket:
         while True:
             message = m
+            message2 = img
             await websocket.send(message)
+            await websocket.send(message2)
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(send_input())
+
 travelsimulation = []
 for i in range(100):
     travel_time = full_time()
@@ -97,6 +101,6 @@ for i in range(100):
 plt.hist(travelsimulation, bins=20, density=True)
 plt.xlabel('Minutes')
 plt.ylabel('Frequency')
-
+img = plt
 # plt.xlim(0, 10)
 plt.show()
