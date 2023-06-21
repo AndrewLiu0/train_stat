@@ -13,7 +13,7 @@ async def start_server():
         await asyncio.Future()
 
 loop = asyncio.get_event_loop()
-# fields needed for algorithm generation
+
 start_name = '34 St-Penn Station' # default value? should be a empty string.
 end_name = 'Chambers St' # default value for now, should be empty.
 async def get_inputs(websocket, path):
@@ -23,10 +23,10 @@ async def get_inputs(websocket, path):
         end_name = data['destination']
 
         response = {'time': calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name))}
-        response_json = json.dumps(response)
+        timeResult = json.dumps(response)
 
         
-        await websocket.send(response_json)
+        await websocket.send(timeResult)
         loop.run_until_complete(start_server())
         loop.run_forever()
 
@@ -87,21 +87,18 @@ def full_time():
     minutes = (final_time.seconds % 3600) // 60
     seconds = final_time.seconds % 60
 
-    # print(f"Travel time from {id_to_name[start_station_id]} to {id_to_name[end_station_id]}:")
-    # print(f"Travel time: {hours} hours, {minutes} minutes, {seconds} seconds")
     return seconds + minutes*60 + hours*3600
     
 # Example usage
-start_station_id = start_name  # should be flutter input
-end_station_id = end_name  # should be flutter input
+start_station_id = start_name  # provided by flutter, done
+end_station_id = end_name  # provided by flutter
 
 async def send_image():
     async with websockets.connect('ws://localhost:8765') as websocket:
         with open(plt, 'rb') as image_file:
-          # Read the image file as bytes
+
             image_bytes = image_file.read()
 
-             #Encode the image as Base64
             image_base64 = base64.b64encode(image_bytes).decode('utf-8')
 
              #Send the image data over the WebSocket
