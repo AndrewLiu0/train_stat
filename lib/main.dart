@@ -8,9 +8,6 @@ import 'package:collection/collection.dart';
 import 'dart:convert' show utf8;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-final channel = WebSocketChannel.connect(
-  Uri.parse('wss://echo.websocket.events'),
-);
 /*
 void _sendMessage() {
     if (_controller.text.isNotEmpty) {
@@ -41,15 +38,19 @@ class TestApp extends StatefulWidget {
 }
 
 class _TestAppState extends State<TestApp> {
+  final _channel = WebSocketChannel.connect(
+    Uri.parse('ws://localhost:8765'),
+  );
   String myLocation = "";
   String destination = "";
   List<String> stations = [];
 
-  @override
+  /*
   void initState() {
     super.initState();
     loadStations();
   }
+  */
 
   Future<void> loadStations() async {
     final fileContents = await rootBundle.loadString('assets/stops.txt');
@@ -105,11 +106,21 @@ class _TestAppState extends State<TestApp> {
                     ),
                     */
                     style: flatButtonStyle,
-                    onPressed: (/* _sendMessage() */) {
-                      /* send the message to the websocket, then have it relay the message back */
-                    },
+                    onPressed: sendMessage,
+                    /* send the message to the websocket, then have it relay the message back */
                     child: const Text('Calculate time between these stations'),
                   ),
+                  StreamBuilder(
+                    stream: _channel.stream,
+                    builder: (context, snapshot) {
+                      if (_showButton) {
+                        return Text(snapshot.hasData ? '${snapshot.data}' : '');
+                      } else {
+                        return const Text("");
+                      }
+                    },
+                  ),
+                  /*
                   _showButton
                       ? const SizedBox.shrink()
                       : TextButton(
@@ -117,6 +128,8 @@ class _TestAppState extends State<TestApp> {
                           onPressed: changeStatus,
                           child: const Text("Calculate a different route"),
                         ),
+
+                */
                 ],
               ),
             )));
@@ -150,11 +163,30 @@ class _TestAppState extends State<TestApp> {
       onChanged: _inputType,
     );
   }
+
 /*
+  void _sendMessage() {
+    if (_controller.text.isNotEmpty) {
+      _channel.sink.add(_controller.text);
+    }
+  }
+
   void dispose() {
     _channel.sink.close();
     _controller.dispose();
     super.dispose();
   }
   */
+  void sendMessage() {
+    if (myLocation != "" && destination != "") {
+      _channel.sink.add(myLocation);
+      _channel.sink.add(destination);
+    }
+  }
+
+  void dispose() {
+    _channel.sink.close();
+    //_controller.dispose();
+    super.dispose();
+  }
 }
