@@ -1,8 +1,8 @@
 version: "Apple Swift version 5.8 (swiftlang-5.8.0.124.2 clang-1403.0.22.11.100)"
 options: "36e814bc6a90fc4e69aa8c601590582817703eabeb1193ebd51dfec0d06b3188"
-build_start_time: [1687148133, 51954000]
-build_end_time: [1687148136, 664801000]
+build_start_time: [1687320923, 328193000]
+build_end_time: [1687320927, 564514000]
 inputs:
-  "/Users/ericlin/Documents/Google Mentorship/train_stat/macos/Flutter/GeneratedPluginRegistrant.swift": [1687148117, 765555872]
+  "/Users/ericlin/Documents/Google Mentorship/train_stat/macos/Flutter/GeneratedPluginRegistrant.swift": [1687320913, 549299994]
   "/Users/ericlin/Documents/Google Mentorship/train_stat/macos/Runner/AppDelegate.swift": [1685059942, 89616644]
   "/Users/ericlin/Documents/Google Mentorship/train_stat/macos/Runner/MainFlutterWindow.swift": [1685059942, 94816405]
