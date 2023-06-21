@@ -9,13 +9,6 @@ import 'dart:convert' show utf8;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 /*
-void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      _channel.sink.add(_controller.text);
-    }
-  }
-  
-
 StreamBuilder(
   stream: channel.stream,
   builder: (context, snapshot) {
@@ -48,12 +41,10 @@ class _TestAppState extends State<TestApp> {
   String destination = "";
   List<String> stations = [];
 
-  
   void initState() {
     super.initState();
     loadStations();
   }
-  
 
   Future<void> loadStations() async {
     final fileContents = await rootBundle.loadString('assets/stops.txt');

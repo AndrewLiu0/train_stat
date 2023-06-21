@@ -7,6 +7,11 @@ import matplotlib.pyplot as plt
 # fields needed for algorithm generation
 start_name = '34 St-Penn Station'
 end_name = 'Chambers St'
+async def get_inputs():
+     async with websockets.connect('ws://localhost:8765') as websocket:
+         while True:
+             start_name = websocket.recv()
+             end_name = websocket.recv()
 
 # read stop_times.txt file
 with open('stop_times.txt', 'r') as file:
@@ -70,13 +75,20 @@ def full_time():
     return seconds + minutes*60 + hours*3600
     
 # Example usage
-start_station_id = 'A02S'  # should be flutter input
-end_station_id = 'H11S'  # should be flutter input
+start_station_id = start_name  # should be flutter input
+end_station_id = end_name  # should be flutter input
 
 
 
-print(calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name)))
+m = print(calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name)))
+async def send_input():
+    async with websockets.connect('ws://localhost:8765') as websocket:
+        while True:
+            message = m
+            await websocket.send(message)
 
+loop = asyncio.get_event_loop()
+loop.run_until_complete(send_input())
 travelsimulation = []
 for i in range(100):
     travel_time = full_time()
