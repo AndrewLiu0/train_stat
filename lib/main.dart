@@ -29,6 +29,9 @@ String destination = "";
 void main() {
   runApp(MaterialApp(
     home: TestApp(),
+    theme: ThemeData(
+      primaryColor: Colors.blue, // Set your desired primary color
+    ),
   ));
 }
 
@@ -78,61 +81,55 @@ class _TestAppState extends State<TestApp> {
   @override
   Widget build(BuildContext context) {
     final ButtonStyle flatButtonStyle = TextButton.styleFrom(
-      primary: Colors.black87,
-      minimumSize: const Size(88, 36),
+      primary: Colors.white,
+      backgroundColor: Colors.blue, // Set your desired button background color
+      minimumSize: const Size(200, 36),
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(2)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(2),
       ),
     );
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text("Transit App"),
-        ),
-        body: Padding(
-            padding: const EdgeInsets.all(60),
-            child: SizedBox(
-              height: 150,
-              child: ListView(
-                children: <Widget>[
-                  createDropdown("My Location", "myLocation"),
-                  const SizedBox(height: 20),
-                  createDropdown("Destination", "destination"),
-                  TextButton(
-                    /*
-                    style: ButtonStyle(
-                      foregroundColor:
-                          MaterialStateProperty.all<Color>(Colors.blue),
-                    ),
-                    */
-                    style: flatButtonStyle,
-                    onPressed: sendMessage,
-                    /* send the message to the websocket, then have it relay the message back */
-                    child: const Text('Calculate time between these stations'),
-                  ),
-                  StreamBuilder(
-                    stream: _channel.stream,
-                    builder: (context, snapshot) {
-                      if (_showButton) {
-                        return Text(snapshot.hasData ? '${snapshot.data}' : '');
-                      } else {
-                        return const Text("");
-                      }
-                    },
-                  ),
-                  /*
-                  _showButton
-                      ? const SizedBox.shrink()
-                      : TextButton(
-                          /* return the app to its original state */
-                          onPressed: changeStatus,
-                          child: const Text("Calculate a different route"),
-                        ),
 
-                */
-                ],
-              ),
-            )));
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Transit App"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            createDropdown("My Location", "myLocation"),
+            const SizedBox(height: 20),
+            createDropdown("Destination", "destination"),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              style: flatButtonStyle,
+              onPressed: sendMessage,
+              child: const Text('Calculate Time Between Stations'),
+            ),
+            const SizedBox(height: 20),
+            StreamBuilder(
+              stream: _channel.stream,
+              builder: (context, snapshot) {
+                if (_showButton) {
+                  return Text(snapshot.hasData ? '${snapshot.data}' : '');
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            _showButton
+                ? ElevatedButton(
+                    onPressed: changeStatus,
+                    child: const Text("Calculate a Different Route"),
+                  )
+                : const SizedBox.shrink(),
+          ],
+        ),
+      ),
+    );
   }
 
   DropdownSearch<String> createDropdown(String label, String inputType) {
@@ -145,17 +142,18 @@ class _TestAppState extends State<TestApp> {
           destination = station as String;
           break;
         default:
-          throw const FormatException("Invalid input type");
+          throw FormatException("Invalid input type");
       }
     }
 
     return DropdownSearch<String>(
       popupProps: const PopupProps.menu(
-          showSelectedItems: true,
-          showSearchBox: true,
-          searchFieldProps: TextFieldProps(
-            cursorColor: Colors.blue, // can add other customization later
-          )),
+        showSelectedItems: true,
+        showSearchBox: true,
+        searchFieldProps: TextFieldProps(
+          cursorColor: Colors.blue,
+        ),
+      ),
       items: stations,
       dropdownDecoratorProps: DropDownDecoratorProps(
           dropdownSearchDecoration: InputDecoration(
@@ -184,9 +182,9 @@ class _TestAppState extends State<TestApp> {
     }
   }
 
+  @override
   void dispose() {
     _channel.sink.close();
-    //_controller.dispose();
     super.dispose();
   }
 }
