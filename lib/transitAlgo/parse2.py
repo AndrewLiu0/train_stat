@@ -14,10 +14,10 @@ async def start_server():
 
 loop = asyncio.get_event_loop()
 
-start_name = '34 St-Penn Station' 
-end_name = 'Chambers St' 
+start_name = '' 
+end_name = '' 
 
-async def get_inputs(websocket, path):
+async def get_inputs(websocket):
     async for message in websocket:
         data = json.loads(message)
         start_name = data['location']
