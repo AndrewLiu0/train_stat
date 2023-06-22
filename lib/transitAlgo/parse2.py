@@ -26,7 +26,8 @@ async def start_server(websocket, path):
         response = {'time': calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name))}
         timeResult = json.dumps(response)
         # sends the result back to Flutter to be displayed
-        await websocket.send(timeResult)
+        # await websocket.send(timeResult)
+        await websocket.send("hi")
         
 # Create a WebSocket server
 start_server_task = asyncio.ensure_future(websockets.serve(start_server, "localhost", 8888))

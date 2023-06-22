@@ -29,12 +29,18 @@ class TestApp extends StatefulWidget {
 
 class _TestAppState extends State<TestApp> {
   late final IOWebSocketChannel _channel;
-  // final _channel = WebSocketChannel.connect(
-  //   Uri.parse('ws://localhost:888'),
-  // );
 
   List<String> stations = [];
-  String resultTime = "";
+  //String resultTime = "";
+
+  String receivedMessage = "not received";
+
+  void handleReceivedMessage(String message) {
+  setState(() {
+    receivedMessage = message;
+  });
+}
+
 
   @override
   void initState() {
@@ -42,8 +48,11 @@ class _TestAppState extends State<TestApp> {
     _channel = IOWebSocketChannel.connect('ws://localhost:8888');
     _channel.stream.listen((data){
       setState((){
-        var response = json.decode(data);
-        resultTime = response['time'];
+        receivedMessage = data;
+        // var response = json.decode(data);
+        // // resultTime = response['time'];
+        // String message = response['message'];
+        // handleReceivedMessage(message);
       });
     });
     loadStations();
@@ -106,14 +115,25 @@ class _TestAppState extends State<TestApp> {
             const SizedBox(height: 20),
             _showButton
                 ? ElevatedButton(
-                    onPressed: changeStatus,
+                    onPressed: () {
+                      
+                      if(myLocation.isNotEmpty && destination.isNotEmpty){
+                        sendMessage();
+                        _showButton = true;
+                        setState((){
+                          _showButton = true;
+                        });
+                      }
+                    },
                     child: const Text("Calculate a Different Route"),
                   )
                 : const SizedBox.shrink(),
             Text(
-              'Received Time: $resultTime',
+              'Received Time: $receivedMessage',
+              
               style: TextStyle(fontSize: 18),
             ),
+            
 
             
           ],
@@ -158,6 +178,7 @@ class _TestAppState extends State<TestApp> {
           json.encode({'location': myLocation, 'destination': destination});
       _channel.sink.add(message);
     }
+    
   }
 
   @override
