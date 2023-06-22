@@ -110,6 +110,12 @@ class _TestAppState extends State<TestApp> {
                     child: const Text("Calculate a Different Route"),
                   )
                 : const SizedBox.shrink(),
+            Text(
+              'Received Time: $resultTime',
+              style: TextStyle(fontSize: 18),
+            ),
+
+            
           ],
         ),
       ),
