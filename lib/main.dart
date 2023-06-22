@@ -8,24 +8,6 @@ import 'package:collection/collection.dart';
 import 'dart:convert' show utf8;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-/*
-void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      _channel.sink.add(_controller.text);
-    }
-  }
-  
-
-StreamBuilder(
-  stream: channel.stream,
-  builder: (context, snapshot) {
-    return Text(snapshot.hasData ? '${snapshot.data}' : '');
-  },
-)
-*/
-String myLocation = "";
-String destination = "";
-
 void main() {
   runApp(MaterialApp(
     home: TestApp(),
@@ -48,12 +30,10 @@ class _TestAppState extends State<TestApp> {
   String destination = "";
   List<String> stations = [];
 
-  
   void initState() {
     super.initState();
     loadStations();
   }
-  
 
   Future<void> loadStations() async {
     final fileContents = await rootBundle.loadString('assets/stops.txt');
@@ -162,19 +142,6 @@ class _TestAppState extends State<TestApp> {
     );
   }
 
-/*
-  void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      _channel.sink.add(_controller.text);
-    }
-  }
-
-  void dispose() {
-    _channel.sink.close();
-    _controller.dispose();
-    super.dispose();
-  }
-  */
   void sendMessage() {
     if (myLocation != "" && destination != "") {
       _channel.sink.add(myLocation);

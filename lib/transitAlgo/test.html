@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>NYC Subway System</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- <script src="dictionary.js"></script> -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f1f1f1;
+        }
+
+        h2 {
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #000000;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 14px;
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #000000;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            width: 240px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .calculate-button {
+            padding: 10px;
+            font-size: 14px;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 20px;
+            width: 240px;
+            text-align: center;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .calculate-button:hover {
+            background-color: #666666;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        
+    </style>
+</head>
+
+<body>
+
+    <h1>How Long is Your Subway Commute?</h1>
+    <h3>By Andrew Liu, Eric Lin, Dylan Ma, Andrew Park</h3>
+
+    <h2>Select Subway Line:</h2>
+    <select id="subwayLineSelect">
+        <option value="">-- Select Line --</option>
+        <!-- Add options dynamically using JavaScript -->
+    </select>
+
+    <h2>Select Origin Station:</h2>
+    <select id="originSelect">
+        <option value="">-- Select Origin --</option>
+        <!-- Origin options will be added dynamically -->
+    </select>
+
+    <h2>Select Destination Station:</h2>
+    <select id="destinationSelect">
+        <option value="">-- Select Destination --</option>
+        <!-- Destination options will be added dynamically -->
+    </select>
+    <button id="calculateTimeButton" class="calculate-button">Calculate Time</button>
+
+    
+
+
+    <script>
+        $(document).ready(function () {
+            // Array of subway lines
+            var subwayLines = ["1", "2", "3", "4" , "5", "6", "7", "A", "B", "C","D","E","F","G","H","J","L","M","N","Q","R"]; 
+
+            // Populate subway line options
+            var subwayLineSelect = $('#subwayLineSelect');
+            $.each(subwayLines, function (index, line) {
+                subwayLineSelect.append($('<option></option>').val(line).html(line));
+            });
+
+            // Handle subway line selection change
+            subwayLineSelect.on('change', function () {
+                var selectedLine = $(this).val();
+                updateStations(selectedLine);
+            });
+
+
+            // Update origin and destination stations based on selected line
+            function updateStations(line) {
+                // Clear origin and destination options
+                $('#originSelect').empty();
+                $('#destinationSelect').empty();
+
+                // Add placeholder options
+                $('#originSelect').append($('<option></option>').val('').html('-- Select Origin --'));
+                $('#destinationSelect').append($('<option></option>').val('').html('-- Select Destination --'));
+
+                // Retrieve stations for the selected line from your extracted data
+                // Replace with your own code to retrieve stations associated with the selected line
+                var stations = getStationsForLine(line);
+
+                // Add station options to the origin and destination dropdowns
+                $.each(stations, function (index, station) {
+                    $('#originSelect').append($('<option></option>').val(station).html(station));
+                    $('#destinationSelect').append($('<option></option>').val(station).html(station));
+                });
+            }
+
+            // Replace this function with your own code to retrieve stations associated with the selected line
+            function getStationsForLine(line) {
+                return Object.entries(stations[line] || {}).reduce((result, [key, value]) => {
+                    if (key.endsWith("S")) {
+                        result[key] = value;
+                    }
+                    return result;
+                }, {});
+            }
+                   
+
+
+        });
+    </script>
+
+<script>
+var stations = {
+        "1": {
+            "101S": "Van Cortlandt Park-242 St",
+            "103S": "238 St",
+            "104S": "231 St",
+            "106S": "Marble Hill-225 St",
+            "107S": "215 St",
+            "108S": "207 St",
+            "109S": "Dyckman St",
+            "110S": "191 St",
+            "111S": "181 St",
+            "112S": "168 St-Washington Hts",
+            "113S": "157 St",
+            "114S": "145 St",
+            "115S": "137 St-City College",
+            "116S": "125 St",
+            "117S": "116 St-Columbia University",
+            "118S": "Cathedral Pkwy (110 St)",
+            "119S": "103 St",
+            "120S": "96 St",
+            "121S": "86 St",
+            "122S": "79 St",
+            "123S": "72 St",
+            "124S": "66 St-Lincoln Center",
+            "125S": "59 St-Columbus Circle",
+            "126S": "50 St",
+            "127S": "Times Sq-42 St",
+            "128S": "34 St-Penn Station",
+            "129S": "28 St",
+            "130S": "23 St",
+            "131S": "18 St",
+            "132S": "14 St",
+            "133S": "Christopher St-Sheridan Sq",
+            "134S": "Houston St",
+            "135S": "Canal St",
+            "136S": "Franklin St",
+            "137S": "Chambers St",
+            "138S": "WTC Cortlandt",
+            "139S": "Rector St",
+            "140S": "South Ferry Loop",
+            "142S": "South Ferry"
+        },
+        "2": {
+            "201S": "Wakefield-241 St",
+            "204S": "Nereid Av",
+            "205S": "233 St",
+            "206S": "225 St",
+            "207S": "219 St",
+            "208S": "Gun Hill Rd",
+            "209S": "Burke Av",
+            "210S": "Allerton Av",
+            "211S": "Pelham Pkwy",
+            "212S": "Bronx Park East",
+            "213S": "E 180 St",
+            "214S": "West Farms Sq-E Tremont Av",
+            "215S": "174 St",
+            "216S": "Freeman St",
+            "217S": "Simpson St",
+            "218S": "Intervale Av",
+            "219S": "Prospect Av",
+            "220S": "Jackson Av",
+            "221S": "3 Av-149 St",
+            "222S": "149 St-Grand Concourse",
+            "224S": "135 St",
+            "225S": "125 St",
+            "226S": "116 St",
+            "227S": "Central Park North (110 St)",
+            "228S": "Park Place",
+            "229S": "Fulton St",
+            "230S": "Wall St",
+            "231S": "Clark St",
+            "232S": "Borough Hall",
+            "233S": "Hoyt St",
+            "234S": "Nevins St",
+            "235S": "Atlantic Av-Barclays Ctr",
+            "236S": "Bergen St",
+            "237S": "Grand Army Plaza",
+            "238S": "Eastern Pkwy-Brooklyn Museum",
+            "239S": "Franklin Av-Medgar Evers College",
+            "241S": "President St-Medgar Evers College",
+            "242S": "Sterling St",
+            "243S": "Winthrop St",
+            "244S": "Church Av",
+            "245S": "Beverly Rd",
+            "246S": "Newkirk Av-Little Haiti",
+            "247S": "Flatbush Av-Brooklyn College",
+            "248S": "Nostrand Av",
+            "249S": "Kingston Av",
+            "250S": "Crown Hts-Utica Av",
+            "251S": "Sutter Av-Rutland Rd",
+            "252S": "Saratoga Av",
+            "253S": "Rockaway Av",
+            "254S": "Junius St",
+            "255S": "Pennsylvania Av",
+            "256S": "Van Siclen Av",
+            "257S": "New Lots Av"
+        },
+        "3": {
+            "301S": "Harlem-148 St",
+            "302S": "145 St",
+        },
+        "4": {
+            "401S": "Woodlawn",
+            "402S": "Mosholu Pkwy",
+            "405S": "Bedford Park Blvd-Lehman College",
+            "406S": "Kingsbridge Rd",
+            "407S": "Fordham Rd",
+            "408S": "183 St",
+            "409S": "Burnside Av",
+            "410S": "176 St",
+            "411S": "Mt Eden Av",
+            "412S": "170 St",
+            "413S": "167 St",
+            "414S": "161 St-Yankee Stadium",
+            "415S": "149 St-Grand Concourse",
+            "416S": "138 St-Grand Concourse",
+            "418S": "Fulton St",
+            "419S": "Wall St",
+            "420S": "Bowling Green",
+            "423S": "Borough Hall",
+        },
+
+        "5": {
+            "501S": "Eastchester-Dyre Av",
+            "502S": "Baychester Av",
+            "503S": "Gun Hill Rd",
+            "504S": "Pelham Pkwy",
+            "505S": "Morris Park",
+        },
+
+        "6": {
+            "601S": "Pelham Bay Park",
+            "602S": "Buhre Av",
+            "603S": "Middletown Rd",
+            "604S": "Westchester Sq-E Tremont Av",
+            "606S": "Zerega Av",
+            "607S": "Castle Hill Av",
+            "608S": "Parkchester",
+            "609S": "St Lawrence Av",
+            "610S": "Morrison Av-Soundview",
+            "611S": "Elder Av",
+            "612S": "Whitlock Av",
+            "613S": "Hunts Point Av",
+            "614S": "Longwood Av",
+            "615S": "E 149 St",
+            "616S": "E 143 St-St Mary's St",
+            "617S": "Cypress Av",
+            "618S": "Brook Av",
+            "619S": "3 Av-138 St",
+            "621S": "125 St",
+            "622S": "116 St",
+            "623S": "110 St",
+            "624S": "103 St",
+            "625S": "96 St",
+            "626S": "86 St",
+            "627S": "77 St",
+            "628S": "68 St-Hunter College",
+            "629S": "59 St",
+            "630S": "51 St",
+            "631S": "Grand Central-42 St",
+            "632S": "33 St",
+            "633S": "28 St",
+            "634S": "23 St",
+            "635S": "14 St-Union Sq",
+            "636S": "Astor Pl",
+            "637S": "Bleecker St",
+            "638S": "Spring St",
+            "639S": "Canal St",
+            "640S": "Brooklyn Bridge-City Hall",
+        },
+        "7": {
+            "701S": "Flushing-Main St",
+            "702S": "Mets-Willets Point",
+            "705S": "111 St",
+            "706S": "103 St-Corona Plaza",
+            "707S": "Junction Blvd",
+            "708S": "90 St-Elmhurst Av",
+            "709S": "82 St-Jackson Hts",
+            "710S": "74 St-Broadway",
+            "711S": "69 St",
+            "712S": "61 St-Woodside",
+            "713S": "52 St",
+            "714S": "46 St-Bliss St",
+            "715S": "40 St-Lowery St",
+            "716S": "33 St-Rawson St",
+            "718S": "Queensboro Plaza",
+            "719S": "Court Sq",
+            "720S": "Hunters Point Av",
+            "721S": "Vernon Blvd-Jackson Av",
+            "723S": "Grand Central-42 St",
+            "724S": "5 Av",
+            "725S": "Times Sq-42 St",
+            "726S": "34 St-Hudson Yards"
+        },
+
+        "A": {
+            "A02S": "Inwood-207 St",
+            "A03S": "Dyckman St",
+            "A05S": "190 St",
+            "A06S": "181 St",
+            "A07S": "175 St",
+            "A09S": "168 St",
+            "A10S": "163 St-Amsterdam Av",
+            "A11S": "155 St",
+            "A12S": "145 St",
+            "A14S": "135 St",
+            "A15S": "125 St",
+            "A16S": "116 St",
+            "A17S": "Cathedral Pkwy (110 St)",
+            "A18S": "103 St",
+            "A19S": "96 St",
+            "A20S": "86 St",
+            "A21S": "81 St-Museum of Natural History",
+            "A22S": "72 St",
+            "A24S": "59 St-Columbus Circle",
+            "A25S": "50 St",
+            "A27S": "42 St-Port Authority Bus Terminal",
+            "A28S": "34 St-Penn Station",
+            "A30S": "23 St",
+            "A31S": "14 St",
+            "A32S": "W 4 St-Wash Sq",
+            "A33S": "Spring St",
+            "A34S": "Canal St",
+            "A36S": "Chambers St",
+            "A38S": "Fulton St",
+            "A40S": "High St",
+            "A41S": "Jay St-MetroTech",
+            "A42S": "Hoyt-Schermerhorn Sts",
+            "A43S": "Lafayette Av",
+            "A44S": "Clinton-Washington Avs",
+            "A45S": "Franklin Av",
+            "A46S": "Nostrand Av",
+            "A47S": "Kingston-Throop Avs",
+            "A48S": "Utica Av",
+            "A49S": "Ralph Av",
+            "A50S": "Rockaway Av",
+            "A51S": "Broadway Junction",
+            "A52S": "Liberty Av",
+            "A53S": "Van Siclen Av",
+            "A54S": "Shepherd Av",
+            "A55S": "Euclid Av",
+            "A57S": "Grant Av",
+            "A59S": "80 St",
+            "A60S": "88 St",
+            "A61S": "Rockaway Blvd",
+            "A63S": "104 St",
+            "A64S": "111 St",
+            "A65S": "Ozone Park-Lefferts Blvd"
+        },
+        "B": {
+            "B04S": "21 St-Queensbridge",
+            "B06S": "Roosevelt Island",
+            "B08S": "Lexington Av/63 St",
+            "B10S": "57 St",
+            "B12S": "9 Av",
+            "B13S": "Fort Hamilton Pkwy",
+            "B14S": "50 St",
+            "B15S": "55 St",
+            "B16S": "62 St",
+            "B17S": "71 St",
+            "B18S": "79 St",
+            "B19S": "18 Av",
+            "B20S": "20 Av",
+            "B21S": "Bay Pkwy",
+            "B22S": "25 Av",
+            "B23S": "Bay 50 St"
+        },
+        "C": { 
+        
+        },
+
+        "D":{
+            "D01S": "Norwood-205 St",
+            "D03S": "Bedford Park Blvd",
+            "D04S": "Kingsbridge Rd",
+            "D05S": "Fordham Rd",
+            "D06S": "182-183 Sts",
+            "D07S": "Tremont Av",
+            "D08S": "174-175 Sts",
+            "D09S": "170 St",
+            "D10S": "167 St",
+            "D11S": "161 St-Yankee Stadium",
+            "D12S": "155 St",
+            "D13S": "145 St",
+            "D14S": "7 Av",
+            "D15S": "47-50 Sts-Rockefeller Ctr",
+            "D16S": "42 St-Bryant Pk",
+            "D17S": "34 St-Herald Sq",
+            "D18S": "23 St",
+            "D19S": "14 St",
+            "D20S": "W 4 St-Wash Sq",
+            "D21S": "Broadway-Lafayette St",
+            "D22S": "Grand St",
+            "D24S": "Atlantic Av-Barclays Ctr",
+            "D25S": "7 Av",
+            "D26S": "Prospect Park",
+            "D27S": "Parkside Av",
+            "D28S": "Church Av",
+            "D29S": "Beverley Rd",
+            "D30S": "Cortelyou Rd",
+            "D31S": "Newkirk Plaza",
+            "D32S": "Avenue H",
+            "D33S": "Avenue J",
+            "D34S": "Avenue M",
+            "D35S": "Kings Hwy",
+            "D37S": "Avenue U",
+            "D38S": "Neck Rd",
+            "D39S": "Sheepshead Bay",
+            "D40S": "Brighton Beach",
+            "D41S": "Ocean Pkwy",
+            "D42S": "W 8 St-NY Aquarium",
+            "D43S": "Coney Island-Stillwell Av"
+        },
+        "E":{
+        
+        },
+
+        "F":{
+            "F01S": "Jamaica-179 St",
+            "F02S": "169 St",
+            "F03S": "Parsons Blvd",
+            "F04S": "Sutphin Blvd",
+            "F05S": "Briarwood",
+            "F06S": "Kew Gardens-Union Tpke",
+            "F07S": "75 Av",
+            "F09S": "Court Sq-23 St",
+            "F11S": "Lexington Av/53 St",
+            "F12S": "5 Av/53 St",
+            "F14S": "2 Av",
+            "F15S": "Delancey St-Essex St",
+            "F16S": "East Broadway",
+            "F18S": "York St",
+            "F20S": "Bergen St",
+            "F21S": "Carroll St",
+            "F22S": "Smith-9 Sts",
+            "F23S": "4 Av-9 St",
+            "F24S": "7 Av",
+            "F25S": "15 St-Prospect Park",
+            "F26S": "Fort Hamilton Pkwy",
+            "F27S": "Church Av",
+            "F29S": "Ditmas Av",
+            "F30S": "18 Av",
+            "F31S": "Avenue I",
+            "F32S": "Bay Pkwy",
+            "F33S": "Avenue N",
+            "F34S": "Avenue P",
+            "F35S": "Kings Hwy",
+            "F36S": "Avenue U",
+            "F38S": "Avenue X",
+            "F39S": "Neptune Av"
+        },
+        "G":{
+            "G05S": "Jamaica Center-Parsons/Archer",
+            "G06S": "Sutphin Blvd-Archer Av-JFK Airport",
+            "G07S": "Jamaica-Van Wyck",
+            "G08S": "Forest Hills-71 Av",
+            "G09S": "67 Av",
+            "G10S": "63 Dr-Rego Park",
+            "G11S": "Woodhaven Blvd",
+            "G12S": "Grand Av-Newtown",
+            "G13S": "Elmhurst Av",
+            "G14S": "Jackson Hts-Roosevelt Av",
+            "G15S": "65 St",
+            "G16S": "Northern Blvd",
+            "G18S": "46 St",
+            "G19S": "Steinway St",
+            "G20S": "36 St",
+            "G21S": "Queens Plaza",
+            "G22S": "Court Sq",
+            "G24S": "21 St",
+            "G26S": "Greenpoint Av",
+            "G28S": "Nassau Av",
+            "G29S": "Metropolitan Av",
+            "G30S": "Broadway",
+            "G31S": "Flushing Av",
+            "G32S": "Myrtle-Willoughby Avs",
+            "G33S": "Bedford-Nostrand Avs",
+            "G34S": "Classon Av",
+            "G35S": "Clinton-Washington Avs",
+            "G36S": "Fulton St"
+        },
+        "H":{
+            "H01S": "Aqueduct Racetrack",
+            "H02S": "Aqueduct-N Conduit Av",
+            "H03S": "Howard Beach-JFK Airport",
+            "H04S": "Broad Channel",
+            "H06S": "Beach 67 St",
+            "H07S": "Beach 60 St",
+            "H08S": "Beach 44 St",
+            "H09S": "Beach 36 St",
+            "H10S": "Beach 25 St",
+            "H11S": "Far Rockaway-Mott Av",
+            "H12S": "Beach 90 St",
+            "H13S": "Beach 98 St",
+            "H14S": "Beach 105 St",
+            "H15S": "Rockaway Park-Beach 116 St",
+            "H19S": "Broad Channel"
+        },
+        "J":{
+            "J12S": "121 St",
+            "J13S": "111 St",
+            "J14S": "104 St",
+            "J15S": "Woodhaven Blvd",
+            "J16S": "85 St-Forest Pkwy",
+            "J17S": "75 St-Elderts Ln",
+            "J19S": "Cypress Hills",
+            "J20S": "Crescent St",
+            "J21S": "Norwood Av",
+            "J22S": "Cleveland St",
+            "J23S": "Van Siclen Av",
+            "J24S": "Alabama Av",
+            "J27S": "Broadway Junction",
+            "J28S": "Chauncey St",
+            "J29S": "Halsey St",
+            "J30S": "Gates Av",
+            "J31S": "Kosciuszko St"
+        },
+        "L":{
+            "L01S": "8 Av",
+            "L02S": "6 Av",
+            "L03S": "14 St-Union Sq",
+            "L05S": "3 Av",
+            "L06S": "1 Av",
+            "L08S": "Bedford Av",
+            "L10S": "Lorimer St",
+            "L11S": "Graham Av",
+            "L12S": "Grand St",
+            "L13S": "Montrose Av",
+            "L14S": "Morgan Av",
+            "L15S": "Jefferson St",
+            "L16S": "DeKalb Av",
+            "L17S": "Myrtle-Wyckoff Avs",
+            "L19S": "Halsey St",
+            "L20S": "Wilson Av",
+            "L21S": "Bushwick Av-Aberdeen St",
+            "L22S": "Broadway Junction",
+            "L24S": "Atlantic Av",
+            "L25S": "Sutter Av",
+            "L26S": "Livonia Av",
+            "L27S": "New Lots Av",
+            "L28S": "East 105 St",
+            "L29S": "Canarsie-Rockaway Pkwy"
+        },
+        "M":{
+            "M01S": "Middle Village-Metropolitan Av",
+            "M04S": "Fresh Pond Rd",
+            "M05S": "Forest Av",
+            "M06S": "Seneca Av",
+            "M08S": "Myrtle-Wyckoff Avs",
+            "M09S": "Knickerbocker Av",
+            "M10S": "Central Av",
+            "M11S": "Myrtle Av",
+            "M12S": "Flushing Av",
+            "M13S": "Lorimer St",
+            "M14S": "Hewes St",
+            "M16S": "Marcy Av",
+            "M18S": "Delancey St-Essex St",
+            "M19S": "Bowery",
+            "M20S": "Canal St",
+            "M21S": "Chambers St",
+            "M22S": "Fulton St",
+            "M23S": "Broad St"
+        },
+        "N":{
+            "N02S": "8 Av",
+            "N03S": "Fort Hamilton Pkwy",
+            "N04S": "New Utrecht Av",
+            "N05S": "18 Av",
+            "N06S": "20 Av",
+            "N07S": "Bay Pkwy",
+            "N08S": "Kings Hwy",
+            "N09S": "Avenue U",
+            "N10S": "86 St",
+            "N12S": "S.B. Coney Island"
+        },
+        "Q":{
+            "Q01S": "Canal St",
+            "Q03S": "72 St",
+            "Q04S": "86 St",
+            "Q05S": "96 St"
+        },
+        "R":{
+            "R01S": "Astoria-Ditmars Blvd",
+            "R03S": "Astoria Blvd",
+            "R04S": "30 Av",
+            "R05S": "Broadway",
+            "R06S": "36 Av",
+            "R08S": "39 Av-Dutch Kills",
+            "R09S": "Queensboro Plaza",
+            "R11S": "Lexington Av/59 St",
+            "R13S": "5 Av/59 St",
+            "R14S": "57 St-7 Av",
+            "R15S": "49 St",
+            "R16S": "Times Sq-42 St",
+            "R17S": "34 St-Herald Sq",
+            "R18S": "28 St",
+            "R19S": "23 St",
+            "R20S": "14 St-Union Sq",
+            "R21S": "8 St-NYU",
+            "R22S": "Prince St",
+            "R23S": "Canal St",
+            "R24S": "City Hall",
+            "R25S": "Cortlandt St",
+            "R26S": "Rector St",
+            "R27S": "Whitehall St-South Ferry",
+            "R28S": "Court St",
+            "R29S": "Jay St-MetroTech",
+            "R30S": "DeKalb Av",
+            "R31S": "Atlantic Av-Barclays Ctr",
+            "R32S": "Union St",
+            "R33S": "4 Av-9 St",
+            "R34S": "Prospect Av",
+            "R35S": "25 St",
+            "R36S": "36 St",
+            "R39S": "45 St",
+            "R40S": "53 St",
+            "R41S": "59 St",
+            "R42S": "Bay Ridge Av",
+            "R43S": "77 St",
+            "R44S": "86 St",
+            "R45S": "Bay Ridge-95 St"
+        }
+
+
+
+
+        
+    };
+</script>
+</body>
+
+</html>

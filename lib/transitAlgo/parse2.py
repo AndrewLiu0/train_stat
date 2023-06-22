@@ -70,20 +70,20 @@ def full_time():
     return seconds + minutes*60 + hours*3600
     
 # Example usage
-start_station_id = 'A02S'  # should be flutter input
-end_station_id = 'H11S'  # should be flutter input
+start_station_id = '701S'  # should be flutter input
+end_station_id = '726S'  # should be flutter input
 
 
 
-print(calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name)))
+print(calculate_travel_time(start_station_id, end_station_id))
 
-travelsimulation = []
-for i in range(100):
-    travel_time = full_time()
-    travelsimulation.append(travel_time/60)
-plt.hist(travelsimulation, bins=20, density=True)
-plt.xlabel('Minutes')
-plt.ylabel('Frequency')
+# travelsimulation = []
+# for i in range(100):
+#     travel_time = full_time()
+#     travelsimulation.append(travel_time/60)
+# plt.hist(travelsimulation, bins=20, density=True)
+# plt.xlabel('Minutes')
+# plt.ylabel('Frequency')
 
-# plt.xlim(0, 10)
-plt.show()
+# # plt.xlim(0, 10)
+# plt.show()
