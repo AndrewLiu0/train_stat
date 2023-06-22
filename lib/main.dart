@@ -7,6 +7,8 @@ import 'package:csv/csv.dart';
 import 'package:collection/collection.dart';
 import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/status.dart' as status;
 
 String myLocation = "";
 String destination = "";
@@ -26,25 +28,25 @@ class TestApp extends StatefulWidget {
 }
 
 class _TestAppState extends State<TestApp> {
-  final _channel = WebSocketChannel.connect(
-    Uri.parse('ws://localhost:8765'),
-  );
-  String myLocation = "";
-  String destination = "";
+  late final IOWebSocketChannel _channel;
+  // final _channel = WebSocketChannel.connect(
+  //   Uri.parse('ws://localhost:888'),
+  // );
+
   List<String> stations = [];
-  String result_time = "";
+  String resultTime = "";
+
+  @override
   void initState() {
     super.initState();
-    loadStations();
-  }
-
-  void get_results() {
-    _channel.stream.listen((data) {
-      setState(() {
-        var response = json.decode("data");
-        result_time = response['time'];
+    _channel = IOWebSocketChannel.connect('ws://localhost:8888');
+    _channel.stream.listen((data){
+      setState((){
+        var response = json.decode(data);
+        resultTime = response['time'];
       });
     });
+    loadStations();
   }
 
   Future<void> loadStations() async {
@@ -64,6 +66,7 @@ class _TestAppState extends State<TestApp> {
   }
 
   bool _showButton = false;
+
   void changeStatus() {
     setState(() {
       _showButton = !_showButton;
@@ -73,7 +76,6 @@ class _TestAppState extends State<TestApp> {
   @override
   Widget build(BuildContext context) {
     final ButtonStyle flatButtonStyle = TextButton.styleFrom(
-      primary: Colors.white,
       backgroundColor: Colors.blue, // Set your desired button background color
       minimumSize: const Size(200, 36),
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -81,6 +83,7 @@ class _TestAppState extends State<TestApp> {
         borderRadius: BorderRadius.circular(2),
       ),
     );
+   
 
     return Scaffold(
       appBar: AppBar(
@@ -101,26 +104,12 @@ class _TestAppState extends State<TestApp> {
               child: const Text('Calculate Time Between Stations'),
             ),
             const SizedBox(height: 20),
-            StreamBuilder(
-              /* PROBLEMATIC */
-              stream: _channel.stream,
-              builder: (context, snapshot) {
-                if (!_showButton) {
-                  return Text(snapshot.hasData ? result_time : '');
-                  // something here that would take the latest mesage
-                } else {
-                  return const SizedBox.shrink();
-                }
-              },
-            ),
-            const SizedBox(height: 20),
             _showButton
                 ? ElevatedButton(
                     onPressed: changeStatus,
                     child: const Text("Calculate a Different Route"),
                   )
                 : const SizedBox.shrink(),
-            /* PROBLEMATIC */
           ],
         ),
       ),

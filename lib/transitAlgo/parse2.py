@@ -8,16 +8,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 import websockets
 
-async def start_server():
-    async with websockets.serve(get_inputs, "localhost", 8765):
-        await asyncio.Future()
 
+
+#ChatGPT: 
+# Create an instance of the event loop
 loop = asyncio.get_event_loop()
 
-start_name = '' 
-end_name = '' 
+start_name = ''
+end_name = ''
 
-async def get_inputs(websocket):
+async def start_server(websocket, path):
     async for message in websocket:
         data = json.loads(message)
         start_name = data['location']
@@ -25,12 +25,13 @@ async def get_inputs(websocket):
 
         response = {'time': calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name))}
         timeResult = json.dumps(response)
-        # sends the result back to the flutter to be displayed
-        
+        # sends the result back to Flutter to be displayed
         await websocket.send(timeResult)
-        loop.run_until_complete(start_server())
-        # loop.run_until_complete(send_graph())
-        loop.run_forever()
+# Create a WebSocket server
+start_server_task = asyncio.ensure_future(websockets.serve(start_server, "localhost", 8888))
+
+# End of chatGPT code
+
 
 # read stop_times.txt file
 with open('stop_times.txt', 'r') as file:
@@ -95,31 +96,31 @@ def full_time():
 start_station_id = start_name 
 end_station_id = end_name  
 
-async def send_graph():
-    async with websockets.connect('ws://localhost:8765') as websocket:
-        with open(plt, 'rb') as image_file:
-            image_bytes = image_file.read()
-            image_base64 = base64.b64encode(image_bytes).decode('utf-8')
-             # sends the image over, can work on this after we get the main features to work
-            await websocket.send(image_base64)
+# async def send_graph():
+#     async with websockets.connect('ws://localhost:8888') as websocket:
+#         with open(plt, 'rb') as image_file:
+#             image_bytes = image_file.read()
+#             image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+#              # sends the image over, can work on this after we get the main features to work
+#             await websocket.send(image_base64)
 
-    """ m = print(calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name)))
-    async def send_input():
-        async with websockets.connect('ws://localhost:8765') as websocket:
-            message = m """
-            #message2 = img
-            #await websocket.send(message)
-           # await websocket.send(message2)
+#     """ m = print(calculate_travel_time(name_to_id.get(start_name), name_to_id.get(end_name)))
+#     async def send_input():
+#         async with websockets.connect('ws://localhost:8888') as websocket:
+#             message = m """
+#             message2 = img
+#             await websocket.send(message)
+#            await websocket.send(message2)
 # loop.run_until_complete(send_input())
 # loop.run_until_complete(send_image())
 
-travelsimulation = []
-for i in range(100):
-    travel_time = full_time()
-    travelsimulation.append(travel_time/60)
-plt.hist(travelsimulation, bins=20, density=True)
-plt.xlabel('Minutes')
-plt.ylabel('Frequency')
-img = plt
-# plt.xlim(0, 10)
-plt.show()
+# travelsimulation = []
+# for i in range(100):
+#     travel_time = full_time()
+#     travelsimulation.append(travel_time/60)
+# plt.hist(travelsimulation, bins=20, density=True)
+# # plt.xlabel('Minutes')
+# # plt.ylabel('Frequency')
+# img = plt
+# # plt.xlim(0, 10)
+# # plt.show()
